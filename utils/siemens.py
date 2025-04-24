@@ -31,7 +31,7 @@ class Siemens:
                     location=job["location"],
                     update_time=job["t_update"],
                     create_time=job["t_create"],
-                    id=job["display_job_id"],
+                    job_id=job["display_job_id"],
                     remote_vs_office=job["work_location_option"],
                     url=job["canonicalPositionUrl"]
                 )

@@ -9,6 +9,6 @@ class Job(BaseModel):
     location: Optional[str] = None
     update_time: Optional[datetime] = None
     create_time: Optional[datetime] = None
-    id: Optional[str] = None
+    job_id: Optional[str] = None
     remote_vs_office: Optional[str] = None
 
