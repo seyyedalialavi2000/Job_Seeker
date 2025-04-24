@@ -1,6 +1,8 @@
 from requests import get
 from bs4 import BeautifulSoup as bs
 
+from schemas import Job
+
 
 class SiemensEnergy:
     def __init__(self):
@@ -25,10 +27,10 @@ class SiemensEnergy:
         soup = bs(self._make_request(offset), 'html.parser')
         while soup.select('.article--result summary.article__header a'):
             for job in soup.select('.article--result summary.article__header a'):
-                yield {
-                    "url": job.get("href"),
-                    "title": job.text.strip()
-                }
+                yield Job(
+                    title=job.text.strip(),
+                    url=job.get("href")
+                )
             offset += 20
             soup = bs(self._make_request(offset), 'html.parser')
 

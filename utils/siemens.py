@@ -1,5 +1,7 @@
 from requests import get
 
+from schemas import Job
+
 
 class Siemens:
     def __init__(self):
@@ -23,15 +25,15 @@ class Siemens:
         positions = self._make_request(start)["positions"]
         while positions:
             for job in positions:
-                yield {
-                    "name": job["name"],
-                    "location": job["location"],
-                    "t_update": job["t_update"],
-                    "t_create": job["t_create"],
-                    "display_job_id": job["display_job_id"],
-                    "work_location_option": job["work_location_option"],
-                    "canonicalPositionUrl": job["canonicalPositionUrl"],
-                }
+                yield Job(
+                    title=job["name"],
+                    location=job["location"],
+                    update_time=job["t_update"],
+                    create_time=job["t_create"],
+                    id=job["display_job_id"],
+                    remote_vs_office=job["work_location_option"],
+                    url=job["canonicalPositionUrl"]
+                )
             start += 10
             positions = self._make_request(start)["positions"]
 
