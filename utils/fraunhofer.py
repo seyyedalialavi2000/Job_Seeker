@@ -26,6 +26,7 @@ class Fraunhofer:
                 title = job.select_one("a").text,
                 url = "https://iisfraunhofer.softgarden.io" + job.select_one("a").get("href")[2:],
                 location = job.select_one(".location-view-item").text,
-                create_time=datetime.strptime(job.select_one(".date").text, "%m/%d/%y")
+                create_time=datetime.strptime(job.select_one(".date").text, "%m/%d/%y"),
+                company="Fraunhofer"
             )
 

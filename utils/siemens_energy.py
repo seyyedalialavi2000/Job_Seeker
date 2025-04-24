@@ -30,7 +30,8 @@ class SiemensEnergy:
             for job in soup.select('.article--result summary.article__header a'):
                 yield Job(
                     title=job.text.strip(),
-                    url=job.get("href")
+                    url=job.get("href"),
+                    company="Siemens Energy"
                 )
             offset += 20
             soup = bs(await self._make_request(offset), 'html.parser')

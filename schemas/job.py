@@ -6,6 +6,7 @@ from datetime import datetime
 class Job(BaseModel):
     title: str
     url: HttpUrl
+    company: str
     location: Optional[str] = None
     update_time: Optional[datetime] = None
     create_time: Optional[datetime] = None

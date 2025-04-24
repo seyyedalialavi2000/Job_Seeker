@@ -26,6 +26,7 @@ class Siemens:
         positions = (await self._make_request(start))["positions"]
         while positions:
             for job in positions:
+                print(job)
                 yield Job(
                     title=job["name"],
                     location=job["location"],
@@ -33,7 +34,8 @@ class Siemens:
                     create_time=job["t_create"],
                     job_id=job["display_job_id"],
                     remote_vs_office=job["work_location_option"],
-                    url=job["canonicalPositionUrl"]
+                    url=job["canonicalPositionUrl"],
+                    company="Siemens Others"
                 )
             start += 10
             positions = (await self._make_request(start))["positions"]
