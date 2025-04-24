@@ -12,20 +12,25 @@ class SiemensEnergy:
         }
         self.url = "https://jobs.siemens-energy.com/en_US/jobs/Jobs/?29454=9" \
             "64485&29454_format=11381&29457=102154&29457_format=11384&listFi" \
-            "lterMode=1&folderRecordsPerPage=20&"
+            "lterMode=1&folderSort=schemaField_3_146_3&folderSortDirection=D" \
+            "ESC&folderRecordsPerPage=20&folderOffset={}"
     
-    def _make_request(self):
-        response = get(url=self.url, headers=self.headers)
+    def _make_request(self, offset=0):
+        response = get(url=self.url.format(offset), headers=self.headers)
         response.raise_for_status()
         return response.text
 
     def get_jobs(self):
-        soup = bs(self._make_request(), 'html.parser')
-        for job in soup.select('.article.article--result summary.article__header a'):
-            yield {
-                "url": job.get("href"),
-                "title": job.text.strip()
-            }
+        offset = 0
+        soup = bs(self._make_request(offset), 'html.parser')
+        while soup.select('.article--result summary.article__header a'):
+            for job in soup.select('.article--result summary.article__header a'):
+                yield {
+                    "url": job.get("href"),
+                    "title": job.text.strip()
+                }
+            offset += 20
+            soup = bs(self._make_request(offset), 'html.parser')
 
 
 if __name__ == "__main__":
