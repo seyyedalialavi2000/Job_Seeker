@@ -1,4 +1,4 @@
-from requests import get
+import httpx
 
 from schemas import Job
 
@@ -15,14 +15,15 @@ class Siemens:
             "ens.com&sort_by=relevance&utm_source=j_c_global&triggerGoButton" \
             "=true"
 
-    def _make_request(self, start=0):
-        response = get(url=self.url.format(start), headers=self.headers)
-        response.raise_for_status()
-        return response.json()
+    async def _make_request(self, start=0):
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url=self.url.format(start), headers=self.headers)
+            response.raise_for_status()
+            return response.json()
 
-    def get_jobs(self):
+    async def get_jobs(self):
         start = 0
-        positions = self._make_request(start)["positions"]
+        positions = (await self._make_request(start))["positions"]
         while positions:
             for job in positions:
                 yield Job(
@@ -35,11 +36,5 @@ class Siemens:
                     url=job["canonicalPositionUrl"]
                 )
             start += 10
-            positions = self._make_request(start)["positions"]
-
-
-if __name__ == "__main__":
-    se = Siemens()
-    for job in se.get_jobs():
-        print(job)
+            positions = (await self._make_request(start))["positions"]
 

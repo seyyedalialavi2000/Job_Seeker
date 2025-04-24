@@ -1,8 +1,12 @@
-from utils import SiemensEnergy, Siemens
+from utils import SiemensEnergy, Siemens, Fraunhofer
+import asyncio
+
+
+async def main():
+    fraunhofer = SiemensEnergy()
+    async for job in fraunhofer.get_jobs():
+        print(job)
 
 if __name__ == "__main__":
-    se = Siemens()
-    for job in se.get_jobs():
-        print(job)
-        print(80*'*')
+    asyncio.run(main())
 

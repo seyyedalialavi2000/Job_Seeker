@@ -1,4 +1,4 @@
-from requests import get
+import httpx
 from datetime import datetime
 from bs4 import BeautifulSoup as bs
 
@@ -9,17 +9,19 @@ class Fraunhofer:
     def __init__(self):
         self.url = "https://iisfraunhofer.softgarden.io/en/vacancies"
     
-    def _make_request(self):
-        response = get(self.url)
-        response.raise_for_status()
-        return response.text
+    async def _make_request(self):
+        async with httpx.AsyncClient() as client:
+            response = await client.get(self.url)
+            response.raise_for_status()
+            return response.text
     
-    def get_jobs(self):
-        soup = bs(self._make_request(), "html.parser")
+    async def get_jobs(self):
+        html = await self._make_request()
+        soup = bs(html, "html.parser")
         for job in soup.select(".matchElement:has(.matchValue.audience:-soup" \
                                "-contains('Student')):has(.location-view-ite" \
-                                "m:-soup-contains('Erlangen'), .location-vie" \
-                                "w-item:-soup-contains('Nürnberg'))"):
+                               "m:-soup-contains('Erlangen'), .location-view" \
+                               "-item:-soup-contains('Nürnberg'))"):
             yield Job(
                 title = job.select_one("a").text,
                 url = "https://iisfraunhofer.softgarden.io" + job.select_one("a").get("href")[2:],

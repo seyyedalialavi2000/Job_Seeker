@@ -1,4 +1,4 @@
-from requests import get
+import httpx
 from bs4 import BeautifulSoup as bs
 
 from schemas import Job
@@ -17,14 +17,15 @@ class SiemensEnergy:
             "lterMode=1&folderSort=schemaField_3_146_3&folderSortDirection=D" \
             "ESC&folderRecordsPerPage=20&folderOffset={}"
     
-    def _make_request(self, offset=0):
-        response = get(url=self.url.format(offset), headers=self.headers)
-        response.raise_for_status()
-        return response.text
+    async def _make_request(self, offset=0):
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url=self.url.format(offset), headers=self.headers)
+            response.raise_for_status()
+            return response.text
 
-    def get_jobs(self):
+    async def get_jobs(self):
         offset = 0
-        soup = bs(self._make_request(offset), 'html.parser')
+        soup = bs(await self._make_request(offset), 'html.parser')
         while soup.select('.article--result summary.article__header a'):
             for job in soup.select('.article--result summary.article__header a'):
                 yield Job(
@@ -32,11 +33,5 @@ class SiemensEnergy:
                     url=job.get("href")
                 )
             offset += 20
-            soup = bs(self._make_request(offset), 'html.parser')
-
-
-if __name__ == "__main__":
-    se = SiemensEnergy()
-    for job in se.get_jobs():
-        print(job)
+            soup = bs(await self._make_request(offset), 'html.parser')
 
