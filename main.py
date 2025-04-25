@@ -10,11 +10,11 @@ from databse import mongo_handler
 app = AioClock()
 @app.task(trigger=Every(minutes=10))
 async def crawl():
-    urls = mongo_handler.get_all_job_urls()
-    for cwl in [SiemensEnergy, Siemens, Fraunhofer]:
+    urls = await mongo_handler.get_all_job_urls()
+    for cwl in [SiemensEnergy(), Siemens(), Fraunhofer()]:
         async for job in cwl.get_jobs():
             if job.url not in urls:
-                mongo_handler.add_job(job)
+                await mongo_handler.add_job(job)
 
 
 if __name__ == "__main__":
