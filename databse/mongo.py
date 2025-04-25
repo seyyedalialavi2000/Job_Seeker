@@ -175,5 +175,16 @@ class MongoDBManager:
         }
         return await self.find_jobs(query)
 
+    async def get_all_job_urls(self) -> List[HttpUrl]:
+        """
+        Retrieves a list of all job URLs from the database as HttpUrl objects.
+
+        Returns:
+            A list of job URLs as HttpUrl objects.
+        """
+        cursor = self.collection.find({}, {'url': 1, '_id': 0})
+        documents = await cursor.to_list(length=None)
+        return [HttpUrl(doc['url']) for doc in documents if 'url' in doc]
+
 mongo_handler = MongoDBManager()
 
