@@ -26,7 +26,6 @@ class Siemens:
         positions = (await self._make_request(start))["positions"]
         while positions:
             for job in positions:
-                print(job)
                 yield Job(
                     title=job["name"],
                     location=job["location"],
