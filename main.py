@@ -84,5 +84,9 @@ async def main():
 
 
 if __name__ == "__main__":
+    # +---just to deploy on koyeb---+
+    import subprocess
+    process = subprocess.Popen(['python3', '-m', 'http.server', '8000'])
+    # +-----------------------------+
     asyncio.run(main())
 
