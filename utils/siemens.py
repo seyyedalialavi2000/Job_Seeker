@@ -34,7 +34,7 @@ class Siemens:
                     job_id=job["display_job_id"],
                     remote_vs_office=job["work_location_option"],
                     url=job["canonicalPositionUrl"],
-                    company="Siemens Others"
+                    company="Siemens_Others"
                 )
             start += 10
             positions = (await self._make_request(start))["positions"]

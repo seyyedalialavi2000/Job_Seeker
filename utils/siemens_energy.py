@@ -31,7 +31,7 @@ class SiemensEnergy:
                 yield Job(
                     title=job.text.strip(),
                     url=job.get("href"),
-                    company="Siemens Energy"
+                    company="Siemens_Energy"
                 )
             offset += 20
             soup = bs(await self._make_request(offset), 'html.parser')

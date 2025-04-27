@@ -32,11 +32,14 @@ async def send_new_job_notification(bot: Bot, job: Job):
     logger.info(f"New job found: {job.title} - {job.url}")
 
     message_text = (
-        f"New Job "
-        f"#{job.company}\n"
-        f"{job.title}\n"
-        f"{job.location}\n"
-        f"{job.url}\n"
+        f"#{job.company}\n\n"
+        f"Title: {job.title}\n\n"
+        f"ID: {job.job_id}\n\n"
+        f"Location: {job.location}\n\n"
+        f"Created at: {job.create_time}\n\n"
+        f"Updated at: {job.update_time}\n\n"
+        f"Remote Vs Office: {job.remote_vs_office}\n\n"
+        f"URL: {job.url}"
     )
     try:
         await bot.send_message(
