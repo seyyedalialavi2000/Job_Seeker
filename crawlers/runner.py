@@ -1,6 +1,8 @@
 import asyncio
 from aioclock import AioClock, Every
+from telegram.ext import Application
 
+from crawlers.base import BaseCrawler
 from crawlers.registry import CrawlerMetadata, CRAWLER_REGISTRY
 from databse import mongo_handler
 from utils import get_logger
@@ -9,22 +11,27 @@ from utils.telegram import send_new_job_notification
 logger = get_logger(__name__)
 
 # Global reference to Telegram bot app
-ptb_app = None
+ptb_app: Application | None = None
 
 
-def set_telegram_app(app):
+def set_telegram_app(app: Application):
     """Set the global Telegram bot application reference."""
     global ptb_app
     ptb_app = app
 
 
 async def run_crawler(crawler_meta: CrawlerMetadata):
-    """Generic runner logic for any crawler - runs independently."""
+    """
+    Generic runner logic for any crawler - runs independently.
+    
+    Args:
+        crawler_meta: Metadata containing crawler class and configuration
+    """
     global ptb_app
     
     logger.info(f"Starting {crawler_meta.name} crawl cycle")
     
-    crawler = crawler_meta.cls()
+    crawler: BaseCrawler = crawler_meta.cls()
     urls = await mongo_handler.get_all_job_urls()
     
     async for job in crawler.get_jobs():

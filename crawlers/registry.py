@@ -1,19 +1,16 @@
 from dataclasses import dataclass
 from typing import Type
 
+from crawlers.base import BaseCrawler
+from crawlers.companies import SiemensEnergy, Siemens, Fraunhofer
+
 
 @dataclass
 class CrawlerMetadata:
     """Metadata for registering a crawler with scheduling info."""
     name: str
-    cls: Type
+    cls: Type[BaseCrawler]
     interval: int  # minutes
-
-
-# Import crawlers for registry
-from crawlers.siemens_energy import SiemensEnergy
-from crawlers.siemens import Siemens
-from crawlers.fraunhofer import Fraunhofer
 
 
 # Crawler Registry - Add new crawlers with their schedule here

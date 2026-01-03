@@ -1,9 +1,12 @@
 import httpx
 
 from schemas import Job
+from crawlers.base import BaseCrawler
 
 
-class Siemens:
+class Siemens(BaseCrawler):
+    """Crawler for Siemens job postings."""
+    
     def __init__(self):
         self.headers = {
             'accept': '*/*',

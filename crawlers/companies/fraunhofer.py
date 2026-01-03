@@ -3,9 +3,12 @@ from datetime import datetime
 from bs4 import BeautifulSoup as bs
 
 from schemas import Job
+from crawlers.base import BaseCrawler
 
 
-class Fraunhofer:
+class Fraunhofer(BaseCrawler):
+    """Crawler for Fraunhofer job postings."""
+    
     def __init__(self):
         self.url = "https://iisfraunhofer.softgarden.io/en/vacancies"
     

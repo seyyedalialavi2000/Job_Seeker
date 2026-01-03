@@ -2,9 +2,12 @@ import httpx
 from bs4 import BeautifulSoup as bs
 
 from schemas import Job
+from crawlers.base import BaseCrawler
 
 
-class SiemensEnergy:
+class SiemensEnergy(BaseCrawler):
+    """Crawler for Siemens Energy job postings."""
+    
     def __init__(self):
         self.headers = {
             'Host': 'jobs.siemens-energy.com',
