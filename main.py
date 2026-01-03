@@ -2,6 +2,8 @@ from dotenv import load_dotenv
 load_dotenv()
 import asyncio
 from os import getenv
+from dataclasses import dataclass
+from typing import Type
 from telegram import Bot
 from aioclock import AioClock, Every
 from telegram.ext import Application, ApplicationBuilder
@@ -20,6 +22,20 @@ if not TELEGRAM_CHANNEL_ID:
 
 setup_logging()
 logger = get_logger(__name__)
+
+@dataclass
+class CrawlerMetadata:
+    """Metadata for registering a crawler with scheduling info."""
+    name: str
+    cls: Type
+    interval: int  # minutes
+
+
+CRAWLER_REGISTRY = [
+    CrawlerMetadata("SiemensEnergy", SiemensEnergy, interval=10),
+    CrawlerMetadata("Siemens", Siemens, interval=10),
+    CrawlerMetadata("Fraunhofer", Fraunhofer, interval=10),
+]
 
 ptb_app: Application | None = None
 
@@ -46,20 +62,42 @@ async def send_new_job_notification(bot: Bot, job: Job):
         logger.error(f"Failed to send Telegram notification for job {job.url}: {e}")
 
 
-app = AioClock()
-@app.task(trigger=Every(minutes=10))
-async def crawl():
+async def run_crawler(crawler_meta: CrawlerMetadata):
+    """Generic runner logic for any crawler - runs independently."""
     global ptb_app
-
-    logger.info("Started crawling cycle...")
+    
+    logger.info(f"Starting {crawler_meta.name} crawl cycle")
+    
+    crawler = crawler_meta.cls()
     urls = await mongo_handler.get_all_job_urls()
-    for cwl in [SiemensEnergy(), Siemens(), Fraunhofer()]:
-        async for job in cwl.get_jobs():
-            if job.url not in urls:
-                await mongo_handler.add_job(job)
-                await send_new_job_notification(ptb_app.bot, job)
-                urls.append(job.url)
-                await asyncio.sleep(10)
+    
+    async for job in crawler.get_jobs():
+        if job.url not in urls:
+            await mongo_handler.add_job(job)
+            await send_new_job_notification(ptb_app.bot, job)
+            urls.append(job.url)
+            await asyncio.sleep(5)
+    
+    logger.info(f"Completed {crawler_meta.name} crawl cycle")
+
+
+def register_crawler_tasks():
+    """Dynamically register each crawler as an independent scheduled task."""
+    for meta in CRAWLER_REGISTRY:
+        # Create a proper closure by using a factory function
+        def make_task(crawler_meta: CrawlerMetadata):
+            @app.task(trigger=Every(minutes=crawler_meta.interval))
+            async def crawler_task():
+                await run_crawler(crawler_meta)
+            # Give it a proper name for debugging
+            crawler_task.__name__ = f"crawl_{crawler_meta.name}"
+            return crawler_task
+        
+        make_task(meta)
+
+
+app = AioClock()
+register_crawler_tasks()
 
 
 async def main():
