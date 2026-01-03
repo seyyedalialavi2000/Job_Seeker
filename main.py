@@ -6,7 +6,7 @@ from aioclock import AioClock
 from telegram.ext import ApplicationBuilder
 
 from utils import setup_logging, get_logger
-from databse import mongo_handler
+from database import mongo_handler
 from crawlers import register_crawler_tasks
 from crawlers.runner import set_telegram_app
 

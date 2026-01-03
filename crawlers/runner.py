@@ -4,7 +4,7 @@ from telegram.ext import Application
 
 from crawlers.base import BaseCrawler
 from crawlers.registry import CrawlerMetadata, CRAWLER_REGISTRY
-from databse import mongo_handler
+from database import mongo_handler
 from utils import get_logger
 from utils.telegram import send_new_job_notification
 
