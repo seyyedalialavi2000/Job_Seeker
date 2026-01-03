@@ -75,8 +75,9 @@ async def run_crawler(crawler_meta: CrawlerMetadata):
         if job.url not in urls:
             await mongo_handler.add_job(job)
             await send_new_job_notification(ptb_app.bot, job)
-            urls.append(job.url)
             await asyncio.sleep(5)
+        else:
+            pass # TO DO: break the cycle on first existing job to avoid redundant checks
     
     logger.info(f"Completed {crawler_meta.name} crawl cycle")
 

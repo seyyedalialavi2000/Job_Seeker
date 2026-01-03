@@ -1,7 +1,7 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 from datetime import datetime, timedelta, date
 from pydantic import HttpUrl
-from typing import Optional, List
+from typing import Optional, List, Set
 from os import getenv
 
 from schemas import Job
@@ -188,16 +188,16 @@ class MongoDBManager:
         }
         return await self.find_jobs(query)
 
-    async def get_all_job_urls(self) -> List[HttpUrl]:
+    async def get_all_job_urls(self) -> Set[HttpUrl]:
         """
-        Retrieves a list of all job URLs from the database as HttpUrl objects.
+        Retrieves a set of all job URLs from the database as HttpUrl objects.
 
         Returns:
-            A list of job URLs as HttpUrl objects.
+            A set of job URLs as HttpUrl objects for O(1) lookup.
         """
         cursor = self.collection.find({}, {'url': 1, '_id': 0})
         documents = await cursor.to_list(length=None)
-        return [HttpUrl(doc['url']) for doc in documents if 'url' in doc]
+        return {HttpUrl(doc['url']) for doc in documents if 'url' in doc}
 
 mongo_handler = MongoDBManager()
 
