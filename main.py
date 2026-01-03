@@ -1,13 +1,12 @@
 from dotenv import load_dotenv
 load_dotenv()
 import asyncio
-import logging
 from os import getenv
 from telegram import Bot
 from aioclock import AioClock, Every
 from telegram.ext import Application, ApplicationBuilder
 
-from utils import SiemensEnergy, Siemens, Fraunhofer
+from utils import SiemensEnergy, Siemens, Fraunhofer, setup_logging, get_logger
 from databse import mongo_handler
 from schemas import Job
 
@@ -19,12 +18,8 @@ if not TELEGRAM_BOT_TOKEN:
 if not TELEGRAM_CHANNEL_ID:
     raise ValueError("TELEGRAM_CHANNEL_ID environment variable not set.")
 
-
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-)
-logging.getLogger("httpx").setLevel(logging.WARNING)
-logger = logging.getLogger(__name__)
+setup_logging()
+logger = get_logger(__name__)
 
 ptb_app: Application | None = None
 
