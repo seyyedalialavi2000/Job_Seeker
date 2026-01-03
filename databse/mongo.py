@@ -5,6 +5,9 @@ from typing import Optional, List
 from os import getenv
 
 from schemas import Job
+from utils import get_logger
+
+logger = get_logger(__name__)
 
 
 class MongoDBManager:
@@ -34,9 +37,9 @@ class MongoDBManager:
         """
         try:
             await self.client.admin.command('ping')
-            print("Pinged your deployment. You successfully connected to MongoDB!")
+            logger.info("Pinged your deployment. You successfully connected to MongoDB!")
         except Exception as e:
-            print(f"Error connecting to MongoDB: {e}")
+            logger.error(f"Error connecting to MongoDB: {e}")
 
     async def close_connection(self):
         """Closes the MongoDB connection."""
@@ -125,7 +128,7 @@ class MongoDBManager:
             result = await self.collection.delete_one({"url": str(job_url)})
             return result.deleted_count > 0
         except Exception as e:
-            print(f"Error deleting job: {e}")
+            logger.error(f"Error deleting job: {e}")
             return False
 
     async def get_last_n_days_update(self, days: int) -> List[Job]:
