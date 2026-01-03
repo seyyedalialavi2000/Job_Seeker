@@ -18,6 +18,16 @@ class MongoDBManager:
         self.db = self.client[db_name]
         self.collection = self.db[collection_name]
 
+    async def __aenter__(self):
+        """Async context manager entry - pings database on first use."""
+        await self.ping()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        """Async context manager exit - closes connection."""
+        await self.close_connection()
+        return False
+
     async def ping(self):
         """
         Pings the MongoDB deployment to check the connection.

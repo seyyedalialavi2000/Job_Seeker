@@ -75,12 +75,13 @@ async def main():
 
     logger.info("Starting AioClock scheduler and Telegram Bot polling...")
 
-    async with ptb_app:
-        await ptb_app.updater.start_polling()
-        logger.info("Telegram Bot polling started.")
+    async with mongo_handler:
+        async with ptb_app:
+            await ptb_app.updater.start_polling()
+            logger.info("Telegram Bot polling started.")
 
-        await app.serve()
-        logger.info("AioClock scheduler started.")
+            await app.serve()
+            logger.info("AioClock scheduler started.")
 
 
 if __name__ == "__main__":
