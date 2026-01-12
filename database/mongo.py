@@ -3,6 +3,8 @@ from datetime import datetime, timedelta, date
 from pydantic import HttpUrl
 from typing import Optional, List, Set
 from os import getenv
+from dotenv import load_dotenv
+load_dotenv()
 
 from schemas import Job
 from utils import get_logger
