@@ -2,7 +2,9 @@ from dataclasses import dataclass
 from typing import Type
 
 from crawlers.base import BaseCrawler
-from crawlers.companies import Accenture, SiemensEnergy, Siemens, Fraunhofer
+from crawlers.companies import (
+    Accenture, SiemensEnergy, Siemens, Fraunhofer, Amazon
+)
 
 
 @dataclass
@@ -19,4 +21,5 @@ CRAWLER_REGISTRY = [
     CrawlerMetadata("Siemens", Siemens, interval=1),
     CrawlerMetadata("Fraunhofer", Fraunhofer, interval=1),
     CrawlerMetadata("Accenture", Accenture, interval=1),
+    CrawlerMetadata("Amazon", Amazon, interval=1),
 ]
