@@ -3,3 +3,4 @@ from crawlers.companies.siemens_energy import SiemensEnergy
 from crawlers.companies.fraunhofer import Fraunhofer
 from crawlers.companies.accenture import Accenture
 from crawlers.companies.amazon import Amazon
+from crawlers.companies.deloitte import Deloitte

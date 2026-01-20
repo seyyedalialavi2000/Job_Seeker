@@ -3,7 +3,7 @@ from typing import Type
 
 from crawlers.base import BaseCrawler
 from crawlers.companies import (
-    Accenture, SiemensEnergy, Siemens, Fraunhofer, Amazon
+    Accenture, SiemensEnergy, Siemens, Fraunhofer, Amazon, Deloitte
 )
 
 
@@ -22,4 +22,5 @@ CRAWLER_REGISTRY = [
     CrawlerMetadata("Fraunhofer", Fraunhofer, interval=1),
     CrawlerMetadata("Accenture", Accenture, interval=1),
     CrawlerMetadata("Amazon", Amazon, interval=1),
+    CrawlerMetadata("Deloitte", Deloitte, interval=1),
 ]
