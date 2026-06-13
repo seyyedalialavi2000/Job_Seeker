@@ -14,6 +14,9 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from schemas import Job
 from crawlers.base import BaseCrawler
+from utils import get_logger
+
+logger = get_logger(__name__)
 
 
 class BMW(BaseCrawler):
@@ -99,7 +102,7 @@ class BMW(BaseCrawler):
             r.raise_for_status()
             return r.text
         except (httpx.HTTPError, httpx.TransportError) as exc:
-            print(f"[BMW] Error fetching search page (start={start}): {exc}")
+            logger.error(f"Error fetching search page (start={start}): {exc}")
             return ""
 
     # --------------------------------------------------------------------- #
