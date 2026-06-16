@@ -6,3 +6,5 @@ from crawlers.companies.amazon import Amazon
 from crawlers.companies.deloitte import Deloitte
 from crawlers.companies.BMW import BMW
 from crawlers.companies.bosch import Bosch
+from crawlers.companies.microsoft import Microsoft
+from crawlers.companies.SAP import SAP
