@@ -40,7 +40,8 @@ async def run_crawler(crawler_meta: CrawlerMetadata):
             await send_new_job_notification(ptb_app.bot, job)
             await asyncio.sleep(5)
         else:
-            pass  # TO DO: break the cycle on first existing job to avoid redundant checks
+            logger.debug(f"Job already exists, stopping crawl early: {job.url}")
+            break  # Jobs are ordered newest-first; first duplicate means all subsequent are already stored
     
     logger.info(f"Completed {crawler_meta.name} crawl cycle")
 
